@@ -14,7 +14,6 @@ Welcome to the **Battleship Game** – an epic console-based naval combat game w
 6. [Instructions](#instructions)
 7. [Technologies Used](#technologies-used)
 8. [Contributing](#contributing)
-9. [License](#license)
 
 ---
 
@@ -53,7 +52,7 @@ Welcome to the **Battleship Game** – an epic console-based naval combat game w
 
 2. Navigate to the project directory:
     ```bash
-    cd BattleShip
+    cd BattleShip/src
     ```
 
 3. Compile the game:

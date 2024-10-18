@@ -1,4 +1,3 @@
-Voici un exemple de `README.md` pour ton projet de jeu **Battleship** en C++ :
 
 ---
 

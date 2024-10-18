@@ -33,7 +33,6 @@ int main() {
         Ship(5, "Destroyer", true, 2, false)
     };
 
-
     showLandingPage();
     int option;
     cout << "> " << endl;

@@ -1,9 +1,0 @@
-# ninja log v6
-2060	2453	7509407268509540	Battleship.exe	d4b4ecc3a3a9d547
-5	479	7509418638561357	build.ninja	6c10b8f1b8684b3f
-86	1445	7508734268534850	CMakeFiles/Battleship.dir/classes/Ship/Ship.cpp.obj	77cf531ab7b83397
-16	2060	7509407248076886	CMakeFiles/Battleship.dir/main.cpp.obj	b305e21de521831c
-12	668	7506974637268483	CMakeFiles/Battleship.dir/classes/boards/boards.cpp.obj	a8a7f9158479c326
-34	1247	7508933345316429	CMakeFiles/Battleship.dir/classes/Cell/Cell.cpp.obj	a34ceb3831407246
-39	718	7507018662362149	CMakeFiles/Battleship.dir/classes/board/boards.cpp.obj	888897cbdd850c62
-8	816	7509383739873333	CMakeFiles/Battleship.dir/classes/board/board.cpp.obj	df92e4cb26ddccdf

@@ -7,6 +7,10 @@ add_executable(Battleship src/main.cpp
         src/board/board.cpp
         src/Cell/Cell.cpp
         src/Ship/Ship.cpp
+        src/UI/Art.cpp
+        src/UI/Art.h
+        src/UX/UX.cpp
+        src/UX/UX.h
 )
 
 target_link_options(Battleship PUBLIC -static -static-libgcc -static-libstdc++)

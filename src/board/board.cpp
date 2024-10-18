@@ -3,7 +3,13 @@
 //
 #include <iostream>
 #include <string>
+#include <unistd.h>
+#include <utility>
 #include "boards.h"
+#include "../UX/UX.h"
+#include "../UI/Art.h"
+
+using namespace std;
 
 #define RESET   "\033[0m"
 #define RED     "\033[31m"
@@ -149,6 +155,67 @@ void Board::hiddenBoard() const {
             board[i][j].isHide = true;
         }
     }
+}
+
+void Board::placeManually(std::list<Ship> Ships) const {
+    int x; int y;
+    int chosenShip;
+
+    cout << *this << endl;
+    int numberShipsPosed = 0;
+    while (numberShipsPosed < Ships.size()) {
+        numberShipsPosed++;
+        UX::questionAddShip(chosenShip, Ships);
+
+        // ======== Check if player choose a right ship ======== //
+        if (chosenShip < 1 || chosenShip > Ships.size()) {
+            cout << "Invalid ship" << endl;
+            continue;
+        }
+
+        UX::questionPosition(x, y);
+
+        auto ship = Ships.begin();
+        std::advance(ship, chosenShip - 1);
+        if (ship->isPosed) {
+            system("cls");
+            cout << endl;
+            cout << RED << "Ship already posed" << RESET << endl;
+            cout << endl;
+            cout << board << endl;
+            cout << endl;
+            continue;
+        }
+        ship->isPosed = true;
+
+        if (!addShip(x - 1, y - 1, *ship)) {
+            cout << board << endl;
+            continue;
+        }
+
+        system("cls");
+        cout << board << endl;
+    }
+}
+
+void Board::play(std::list<Ship> Ships)  {
+    cout << "Starting Battle Ship Game" << endl;
+    placeManually(std::move(Ships));
+    system("cls");
+    cout << " =========== All ships placed ===========" << endl;
+    cout << endl;
+    hiddenBoard();
+    cout << board << endl;
+
+    while (numberShipsSunken < Ships.size()) {
+        int x; int y;
+        UX::questionPosition(x, y);
+        hitCell(x - 1, y - 1);
+        system("cls");
+        cout << board << endl;
+    }
+    Art::gameOver();
+    sleep(3);
 }
 
 Board::~Board() {

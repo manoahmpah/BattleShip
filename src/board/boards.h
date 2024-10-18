@@ -20,8 +20,12 @@ class Board {
         void placeAutomatically(std::list<Ship> &Ships) const;
         void hitCell(int x, int y);
         void hiddenBoard() const;
+
+        void placeManually(std::list<Ship> Ships) const;
         ~Board();
-        Board(int Size);
+        explicit Board(int Size);
+
+        void play(std::list<Ship> Ships);
 
 
     private:

@@ -44,7 +44,7 @@ void UX::questionAddShip(int &chosenShip, const std::list<Ship> &Ships) {
         for (const auto &ship : Ships) {
                 if (!ship.isPosed) {
                         size_t padding = maxLength - ship.name.length();
-                        cout << "                      " << i << " - " << ship.name << string(padding, ' ')
+                        cout << "                      " << ship.id << " - " << ship.name << string(padding, ' ')
                                << " [ " << ship.size << " of weight ]                      \n";
                         i++;
                 }

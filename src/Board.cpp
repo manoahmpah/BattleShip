@@ -221,7 +221,8 @@ void Board::play(std::list<Ship> Ships)  {
             break;
         }
     }
-    cout << " =========== All ships placed ===========" << endl;
+    system("cls");
+    cout << " ======= All ships placed =======" << endl;
     cout << endl;
     hiddenBoard();
     cout << *this << endl;

@@ -49,7 +49,7 @@ Welcome to the **Battleship Game** – an epic console-based naval combat game w
 ### Steps
 1. Clone this repository:
     ```bash
-    git clone https://github.com/yourusername/battleship-game.git
+    git clone https://github.com/mpahmanoah/BattleShip.git
     ```
 
 2. Navigate to the project directory:

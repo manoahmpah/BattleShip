@@ -1,5 +1,5 @@
 #include <iostream>
-#include "classes/board/boards.h"
+#include "board/boards.h"
 #include <list>
 #include <cctype>
 #include <cstdlib>
@@ -81,10 +81,6 @@ int main() {
             cout << "Invalid option. Please try again." << endl;
         break;
     }
-
-
-
-
     return 0;
 }
 
@@ -93,8 +89,9 @@ void placeManually(const Board &board, list<Ship> &Ships) {
     int chosenShip;
 
     cout << board << endl;
-
-    while (!Ships.empty()) {
+    int numberShipsPosed = 0;
+    while (numberShipsPosed < Ships.size()) {
+        numberShipsPosed++;
         questionAddShip(chosenShip, Ships);
 
         // ======== Check if player choose a right ship ======== //
@@ -106,6 +103,15 @@ void placeManually(const Board &board, list<Ship> &Ships) {
 
         auto ship = Ships.begin();
         std::advance(ship, chosenShip - 1);
+        if (ship->isPosed) {
+            system("cls");
+            cout << endl;
+            cout << RED << "Ship already posed" << RESET << endl;
+            cout << endl;
+            cout << board << endl;
+            cout << endl;
+            continue;
+        }
         ship->isPosed = true;
 
         if (!board.addShip(x - 1, y - 1, *ship)) {
@@ -123,6 +129,11 @@ void questionAddShip(int &chosenShip, const list<Ship> &Ships) {
     for (int i = 0; i < Ships.size(); i++) {
         auto ship = Ships.begin();
         std::advance(ship, i);
+
+        if (ship->isPosed) {
+            continue;
+        }
+
         cout << i + 1 << " - " << ship->name << endl;
     }
 

@@ -3,11 +3,10 @@
 //
 
 #include "Ship.h"
-Ship::Ship(int idShip, const std::string &nameShip, const bool &isShipHorizontal, int sizeShip, bool &isPosed) {
+Ship::Ship(int idShip, const std::string &nameShip, bool isShipHorizontal, int sizeShip, bool isposed) {
     isHit = false;
     isSunk = false;
-    isPosed = false;
-
+    isPosed = isposed;
     name = nameShip;
     size = sizeShip;
     isHorizontal = isShipHorizontal;

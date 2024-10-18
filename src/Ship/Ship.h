@@ -5,7 +5,7 @@
 
 class Ship {
     public:
-        Ship(int idShip = 1, const std::string &nameShip = "Empty", const bool &isShipHorizontal = true, int sizeShip = 3, bool isPosed = false);
+        Ship(int idShip, const std::string &nameShip, bool isShipHorizontal, int sizeShip, bool isposed);
         std::string state;
         std::string name;
         bool isHit;
@@ -14,6 +14,8 @@ class Ship {
         int id;
         int size;
         bool isHorizontal;
+
+        Ship(int idShip, const std::string &nameShip, const bool &isShipHorizontal, int sizeShip, bool &isPosed);
 
         bool operator==(const Ship & ship) const;
 };

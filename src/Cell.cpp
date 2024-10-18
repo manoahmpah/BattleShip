@@ -3,10 +3,10 @@
 //
 
 #include "Cell.h"
-#include "../Ship/Ship.h"
+#include "Ship.h"
 
 Cell::Cell() {
     std::string stat = " ";
-    isHide = true;
+    isHidden = true;
     ship = nullptr;
 }

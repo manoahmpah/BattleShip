@@ -4,13 +4,15 @@ project(Battleship)
 set(CMAKE_CXX_STANDARD 20)
 
 add_executable(Battleship src/main.cpp
-        src/board/board.cpp
-        src/Cell/Cell.cpp
-        src/Ship/Ship.cpp
-        src/UI/Art.cpp
-        src/UI/Art.h
-        src/UX/UX.cpp
-        src/UX/UX.h
+        src/board.cpp
+        src/Cell.cpp
+        src/Ship.cpp
+        src/Art.cpp
+        src/Art.h
+        src/UX.cpp
+        src/UX.h
+        src/Fleet.cpp
+        src/Fleet.h
 )
 
 target_link_options(Battleship PUBLIC -static -static-libgcc -static-libstdc++)

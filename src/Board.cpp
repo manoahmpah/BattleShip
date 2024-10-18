@@ -5,9 +5,9 @@
 #include <string>
 #include <unistd.h>
 #include <utility>
-#include "boards.h"
-#include "../UX/UX.h"
-#include "../UI/Art.h"
+#include "Board.h"
+#include "UX.h"
+#include "Art.h"
 
 using namespace std;
 
@@ -32,7 +32,7 @@ std::ostream& operator<<(std::ostream& os, const Board& board) {
 
         os << char(65+i) << "  ║";
         for (int j = 0; j < board.size; j++) {
-            if (board.board[i][j].isHide) {
+            if (board.board[i][j].isHidden) {
                 os << " . ";
             } else if (board.board[i][j].ship != nullptr) {
                 if (board.board[i][j].ship->isSunk) {
@@ -66,12 +66,12 @@ bool Board::errorPosition(int x, int y, const Ship &ship) const {
     }
 
     for (int i = 0; i < ship.size; i++) {
-        if (ship.isHorizontal && !board[x][y + i].isHide) {
+        if (ship.isHorizontal && !board[x][y + i].isHidden) {
             std::cout << "Position already occupied" << std::endl;
             return false;
         }
 
-        if (!ship.isHorizontal && !board[x + i][y].isHide) {
+        if (!ship.isHorizontal && !board[x + i][y].isHidden) {
             std::cout << "Position already occupied" << std::endl;
             return false;
         }
@@ -86,16 +86,16 @@ bool Board::addShip(int x, int y, Ship &ship) const {
     }
 
 
-    if (ship.isHorizontal && board[x][y].isHide) {
+    if (ship.isHorizontal && board[x][y].isHidden) {
         for(int i = 0; i < ship.size; i++) {
-            board[x][y + i].isHide = false;
+            board[x][y + i].isHidden = false;
             board[x][y + i].ship = &ship;
 
         }
 
-    } else if (!ship.isHorizontal && board[x][y].isHide) {
+    } else if (!ship.isHorizontal && board[x][y].isHidden) {
         for (int i = 0; i < ship.size; i++) {
-            board[x + i][y].isHide = false;
+            board[x + i][y].isHidden = false;
             board[x + i][y].ship = &ship;
         }
     }
@@ -111,18 +111,18 @@ void Board::hitCell(int x, int y) {
         std::cout << "======= Miss =======" << std::endl;
         std::cout << board[x][y].stat << std::endl;
         board[x][y].stat = "o";
-        board[x][y].isHide = false;
+        board[x][y].isHidden = false;
     }else if(board[x][y].ship->size == 1 && board[x][y].stat != "x") {
         board[x][y].ship->isSunk = true;
         numberShipsSunken++;
         board[x][y].stat = "X";
         board[x][y].ship->size--;
-        board[x][y].isHide = false;
+        board[x][y].isHidden = false;
     }else if (board[x][y].ship != nullptr && board[x][y].stat != "x") {
         board[x][y].ship->isHit = true;
         board[x][y].stat = "x";
         board[x][y].ship->size--;
-        board[x][y].isHide = false;
+        board[x][y].isHidden = false;
 
     }
 }
@@ -152,7 +152,7 @@ void Board::placeAutomatically(std::list<Ship> &Ships) const {
 void Board::hiddenBoard() const {
     for (int i = 0; i < size; i++) {
         for (int j = 0; j < size; j++) {
-            board[i][j].isHide = true;
+            board[i][j].isHidden = true;
         }
     }
 }
@@ -182,37 +182,56 @@ void Board::placeManually(std::list<Ship> Ships) const {
             cout << endl;
             cout << RED << "Ship already posed" << RESET << endl;
             cout << endl;
-            cout << board << endl;
+            cout << *this << endl;
             cout << endl;
             continue;
         }
         ship->isPosed = true;
 
         if (!addShip(x - 1, y - 1, *ship)) {
-            cout << board << endl;
+            cout << *this << endl;
             continue;
         }
 
         system("cls");
-        cout << board << endl;
+        cout << *this << endl;
     }
 }
 
 void Board::play(std::list<Ship> Ships)  {
     cout << "Starting Battle Ship Game" << endl;
-    placeManually(std::move(Ships));
+    int gameMode;
+    cout << "Choose a mode" << endl;
+    cout << "1 - Solo mode" << endl;
+    cout << "2 - 2 Players mode" << endl;
+    cin >> gameMode;
     system("cls");
+    switch (gameMode) {
+        case 1: {
+            placeAutomatically(Ships);
+            break;
+        }
+        case 2: {
+            placeManually(Ships);
+            break;
+        }
+        default: {
+            cout << "Invalid option. Please try again." << endl;
+            play(Ships);
+            break;
+        }
+    }
     cout << " =========== All ships placed ===========" << endl;
     cout << endl;
     hiddenBoard();
-    cout << board << endl;
+    cout << *this << endl;
 
     while (numberShipsSunken < Ships.size()) {
         int x; int y;
         UX::questionPosition(x, y);
         hitCell(x - 1, y - 1);
         system("cls");
-        cout << board << endl;
+        cout << *this << endl;
     }
     Art::gameOver();
     sleep(3);

@@ -100,3 +100,4 @@ void Art::showInstructions() {
     cout << "█ Press Enter to return to the main menu...                       █\n";
     cout << "███████████████████████████████████████████████████████████████████\n";
 }
+

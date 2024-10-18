@@ -6,15 +6,15 @@
 #define CELL_H
 
 #include <string>
-#include "../Ship/Ship.h"
+#include "Ship.h"
 
 
 class Cell {
 public:
-    Cell();
     std::string stat;
-    bool isHide;
+    bool isHidden;
     Ship *ship;
+    Cell();
 };
 
 

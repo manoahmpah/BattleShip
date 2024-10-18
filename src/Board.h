@@ -6,8 +6,8 @@
 #define BOARDS_H
 #include <list>
 
-#include "../Cell/Cell.h"
-#include "../Ship/Ship.h"
+#include "Cell.h"
+#include "Ship.h"
 
 class Board {
     public:

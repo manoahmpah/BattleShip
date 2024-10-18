@@ -1,10 +1,11 @@
 #include <iostream>
-#include "board/boards.h"
-#include "UI/Art.h"
-#include <list>
 #include <cctype>
 #include <cstdlib>
 #include <unistd.h>
+
+#include "Board.h"
+#include "Art.h"
+#include "Fleet.h"
 
 #ifdef _WIN32
 #include <Windows.h>
@@ -20,18 +21,15 @@ using namespace std;
 
 int main() {
     system("cls");
-    std::list Ships = {
-        Ship(1, "Aircraft carrier", true, 5, false),
-        Ship(2, "Battleship", false, 4, false),
-        Ship(3, "Cruiser", true, 3, false),
-        Ship(4, "Submarine", true, 3, false),
-        Ship(5, "Destroyer", true, 2, false)
-    };
+
+    const Fleet fleet;
+    list<Ship> Ships = fleet.Ships;
 
     Art::showLandingPage();
     int option;
-    cout << "> " << endl;
+    cout << "> ";
     cin >> option;
+    cout << endl;
 
     switch (option) {
         case 1:

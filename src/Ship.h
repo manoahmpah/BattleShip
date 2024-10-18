@@ -16,7 +16,7 @@ class Ship {
         bool isHorizontal;
 
         Ship(int idShip, const std::string &nameShip, const bool &isShipHorizontal, int sizeShip, bool &isPosed);
-
+    private:
         bool operator==(const Ship & ship) const;
 };
 

@@ -4,10 +4,10 @@
 #include <iostream>
 #include <string>
 #include <unistd.h>
-#include <utility>
 #include "Board.h"
 #include "UX.h"
 #include "Art.h"
+#include "Player.h"
 
 using namespace std;
 
@@ -196,14 +196,19 @@ void Board::placeManually(std::list<Ship> Ships) const {
         system("cls");
         cout << *this << endl;
     }
+
 }
 
 void Board::play(std::list<Ship> Ships)  {
     cout << "Starting Battle Ship Game" << endl;
     int gameMode;
-    cout << "Choose a mode" << endl;
-    cout << "1 - Solo mode" << endl;
-    cout << "2 - 2 Players mode" << endl;
+    cout << "╔═══════════════════════════════════════╗\n";
+    cout << "║            Choose a mode              ║\n";
+    cout << "╠═══════════════════════════════════════╣\n";
+    cout << "║    1 - Solo mode                      ║\n";
+    cout << "║    2 - 2 Players mode                 ║\n";
+    cout << "╚═══════════════════════════════════════╝\n";
+    cout << "> ";
     cin >> gameMode;
     system("cls");
     switch (gameMode) {

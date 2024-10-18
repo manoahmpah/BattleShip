@@ -1,12 +1,14 @@
 //
 // Created by MPAH on 18/10/2024.
 //
-#include "Ship.h"
 
+#include <list>
+#include "Ship.h"
 #include "Fleet.h"
 
-void Fleet::addShip() {
-    const Ship ship(Ships.back().id + 1, "Test", true, 1, false);
-    Ships.push_back(ship);
+using namespace std;
 
+void Fleet::addShip(const string &name, bool isHorizontal, int size, bool isSunk) {
+    const Ship ship(Ships.back().id + 1, name, isHorizontal, size, isSunk);
+    Ships.push_back(ship);
 }

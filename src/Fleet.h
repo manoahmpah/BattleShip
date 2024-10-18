@@ -18,7 +18,7 @@ class Fleet {
             Ship(4, "Submarine", true, 3, false),
             Ship(5, "Destroyer", true, 2, false)
         };
-        void addShip();
+        void addShip(const std::string &name, bool isHorizontal, int size, bool isSunk);
 
 };
 

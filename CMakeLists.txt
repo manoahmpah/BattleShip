@@ -13,6 +13,8 @@ add_executable(Battleship src/main.cpp
         src/UX.h
         src/Fleet.cpp
         src/Fleet.h
+        src/Player.cpp
+        src/Player.h
 )
 
 target_link_options(Battleship PUBLIC -static -static-libgcc -static-libstdc++)

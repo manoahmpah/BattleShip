@@ -54,7 +54,7 @@ Welcome to the **Battleship Game** – an epic console-based naval combat game w
 
 2. Navigate to the project directory:
     ```bash
-    cd battleship-game
+    cd BattleShip
     ```
 
 3. Compile the game:
@@ -129,5 +129,3 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 **Enjoy the game, and may the best captain win!** 🛳️🔥
 
 ---
-
-Tu peux bien sûr modifier les parties "Game Preview" et "Technologies Used" selon ton projet. N'oublie pas d'ajouter des informations précises concernant les fichiers `.cpp` que tu as développés, ainsi que les instructions spécifiques à l'installation sur Windows ou autres systèmes d'exploitation.

@@ -102,31 +102,6 @@ bool Board::addShip(int x, int y, Ship &ship) const {
     return true;
 }
 
-void Board::hitCell(int x, int y) {
-    if (x < 0 || x >= size || y < 0 || y >= size) {
-        std::cout << "Position out of range" << std::endl;
-        return;
-    }
-    if (board[x][y].ship == nullptr) {
-        std::cout << "======= Miss =======" << std::endl;
-        std::cout << board[x][y].stat << std::endl;
-        board[x][y].stat = "o";
-        board[x][y].isHidden = false;
-    }else if(board[x][y].ship->size == 1 && board[x][y].stat != "x") {
-        board[x][y].ship->isSunk = true;
-        numberShipsSunken++;
-        board[x][y].stat = "X";
-        board[x][y].ship->size--;
-        board[x][y].isHidden = false;
-    }else if (board[x][y].ship != nullptr && board[x][y].stat != "x") {
-        board[x][y].ship->isHit = true;
-        board[x][y].stat = "x";
-        board[x][y].ship->size--;
-        board[x][y].isHidden = false;
-
-    }
-}
-
 
 void Board::placeAutomatically(std::list<Ship> &Ships) const {
     std::list x = {0, 1, 5, 6, 9};
@@ -155,92 +130,6 @@ void Board::hiddenBoard() const {
             board[i][j].isHidden = true;
         }
     }
-}
-
-void Board::placeManually(std::list<Ship> Ships) const {
-    int x; int y;
-    int chosenShip;
-
-    cout << *this << endl;
-    int numberShipsPosed = 0;
-    while (numberShipsPosed < Ships.size()) {
-        numberShipsPosed++;
-        UX::questionAddShip(chosenShip, Ships);
-
-        // ======== Check if player choose a right ship ======== //
-        if (chosenShip < 1 || chosenShip > Ships.size()) {
-            cout << "Invalid ship" << endl;
-            continue;
-        }
-
-        UX::questionPosition(x, y);
-
-        auto ship = Ships.begin();
-        std::advance(ship, chosenShip - 1);
-        if (ship->isPosed) {
-            system("cls");
-            cout << endl;
-            cout << RED << "Ship already posed" << RESET << endl;
-            cout << endl;
-            cout << *this << endl;
-            cout << endl;
-            continue;
-        }
-        ship->isPosed = true;
-
-        if (!addShip(x - 1, y - 1, *ship)) {
-            cout << *this << endl;
-            continue;
-        }
-
-        system("cls");
-        cout << *this << endl;
-    }
-
-}
-
-void Board::play(std::list<Ship> Ships)  {
-    cout << "Starting Battle Ship Game" << endl;
-    int gameMode;
-    cout << "╔═══════════════════════════════════════╗\n";
-    cout << "║            Choose a mode              ║\n";
-    cout << "╠═══════════════════════════════════════╣\n";
-    cout << "║    1 - Solo mode                      ║\n";
-    cout << "║    2 - 2 Players mode                 ║\n";
-    cout << "╚═══════════════════════════════════════╝\n";
-    cout << "> ";
-    cin >> gameMode;
-    system("cls");
-    switch (gameMode) {
-        case 1: {
-            placeAutomatically(Ships);
-            break;
-        }
-        case 2: {
-            placeManually(Ships);
-            break;
-        }
-        default: {
-            cout << "Invalid option. Please try again." << endl;
-            play(Ships);
-            break;
-        }
-    }
-    system("cls");
-    cout << " ======= All ships placed =======" << endl;
-    cout << endl;
-    hiddenBoard();
-    cout << *this << endl;
-
-    while (numberShipsSunken < Ships.size()) {
-        int x; int y;
-        UX::questionPosition(x, y);
-        hitCell(x - 1, y - 1);
-        system("cls");
-        cout << *this << endl;
-    }
-    Art::gameOver();
-    sleep(3);
 }
 
 Board::~Board() {

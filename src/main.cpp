@@ -6,6 +6,7 @@
 #include "Board.h"
 #include "Art.h"
 #include "Fleet.h"
+#include "Player.h"
 
 #ifdef _WIN32
 #include <Windows.h>
@@ -34,10 +35,13 @@ int main() {
     switch (option) {
         case 1:
         {
-            system("cls");
-            Board board(10);
-            board.play(Ships);
-            main();
+            Player player1("Maxime");
+            Player player2("Cédric");
+
+            player1.autoPlaceShips();
+            player2.autoPlaceShips();
+
+            // main();
         }
         break;
 

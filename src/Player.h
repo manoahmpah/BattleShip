@@ -9,9 +9,19 @@
 
 
 class Player {
-    public:
+public:
+        Player(const std::string &name);
+        void displayBoard() const;
+        void autoPlaceShips();
+        void gameMode();
+
+private:
+        std::string name;
+        bool placeShip(int x, int y, Ship &ship) const;
+        void hitCell(int x, int y);
         Board playerBoard;
         Fleet playerFleet;
+        bool autoPlay = false;
 };
 
 

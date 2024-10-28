@@ -1,19 +1,14 @@
-//
-// Created by MPAH on 18/10/2024.
-//
-
 #include <iostream>
 #include "Art.h"
-
 #include <unistd.h>
-
-#define RESET   "\033[0m"
-#define RED     "\033[31m"
+#include "Color.h"
 
 #ifdef _WIN32
-#include <Windows.h>
-#define SET_CONSOLE_UTF8 SetConsoleCP(CP_UTF8); SetConsoleOutputCP(CP_UTF8); //Set console output to UTF-8.Visual C++ code on Windows.
-#endif // _WIN32
+    #include <windows.h>
+    #define SET_CONSOLE_UTF8 SetConsoleCP(CP_UTF8); SetConsoleOutputCP(CP_UTF8);
+#else
+    #define SET_CONSOLE_UTF8
+#endif
 
 using namespace std;
 
@@ -52,30 +47,31 @@ void Art::gameOver() {
     #ifdef _WIN32
     SET_CONSOLE_UTF8
 #endif
+    using enum Color;
     system("cls");
     cout << "╔═════════════════════════════════════════════════════════════════════════════════════╗\n";
     sleep(1);
     cout << "║                                                                                     ║\n";
-    cout << "║" << RED <<  "                        ██████╗  █████╗ ███╗   ███╗███████╗                          " << RESET << "║\n";
-    cout << "║" << RED <<  "                       ██╔════╝ ██╔══██╗████╗ ████║██╔════╝                          " << RESET << "║\n";
-    cout << "║" << RED <<  "                       ██║  ███╗███████║██╔████╔██║█████╗                            " << RESET << "║\n";
-    cout << "║" << RED <<  "                       ██║   ██║██╔══██║██║╚██╔╝██║██╔══╝                            " << RESET << "║\n";
+    cout << "║" << getColorCode(RED) <<  "                        ██████╗  █████╗ ███╗   ███╗███████╗                          " << getColorCode(RESET) << "║\n";
+    cout << "║" << getColorCode(RED) <<  "                       ██╔════╝ ██╔══██╗████╗ ████║██╔════╝                          " << getColorCode(RESET) << "║\n";
+    cout << "║" << getColorCode(RED) <<  "                       ██║  ███╗███████║██╔████╔██║█████╗                            " << getColorCode(RESET) << "║\n";
+    cout << "║" << getColorCode(RED) <<  "                       ██║   ██║██╔══██║██║╚██╔╝██║██╔══╝                            " << getColorCode(RESET) << "║\n";
     sleep(1);
-    cout << "║" << RED <<  "                       ╚██████╔╝██║  ██║██║ ╚═╝ ██║███████╗                          " << RESET << "║\n";
-    cout << "║" << RED <<  "                        ╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝                          " << RESET << "║\n";
+    cout << "║" << getColorCode(RED) <<  "                       ╚██████╔╝██║  ██║██║ ╚═╝ ██║███████╗                          " << getColorCode(RESET) << "║\n";
+    cout << "║" << getColorCode(RED) <<  "                        ╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝                          " << getColorCode(RESET) << "║\n";
     sleep(1);
     cout << "║                                                                                     ║\n";
-    cout << "║" << RED <<  "                       ██████╗ ██╗   ██╗███████╗██████╗                              " << RESET << "║\n";
-    cout << "║" << RED <<  "                      ██╔═══██╗██║   ██║██╔════╝██╔══██╗                             " << RESET << "║\n";
-    cout << "║" << RED <<  "                      ██║   ██║██║   ██║█████╗  ██████╔╝                             " << RESET << "║\n";
-    cout << "║" << RED <<  "                      ██║   ██║╚██╗ ██╔╝██╔══╝  ██╔══██╗                             " << RESET << "║\n";
-    cout << "║" << RED <<  "                      ╚██████╔╝ ╚████╔╝ ███████╗██║  ██║                             " << RESET << "║\n";
+    cout << "║" << getColorCode(RED) <<  "                       ██████╗ ██╗   ██╗███████╗██████╗                              " << getColorCode(RESET) << "║\n";
+    cout << "║" << getColorCode(RED) <<  "                      ██╔═══██╗██║   ██║██╔════╝██╔══██╗                             " << getColorCode(RESET) << "║\n";
+    cout << "║" << getColorCode(RED) <<  "                      ██║   ██║██║   ██║█████╗  ██████╔╝                             " << getColorCode(RESET) << "║\n";
+    cout << "║" << getColorCode(RED) <<  "                      ██║   ██║╚██╗ ██╔╝██╔══╝  ██╔══██╗                             " << getColorCode(RESET) << "║\n";
+    cout << "║" << getColorCode(RED) <<  "                      ╚██████╔╝ ╚████╔╝ ███████╗██║  ██║                             " << getColorCode(RESET) << "║\n";
     sleep(1);
-    cout << "║" << RED <<  "                       ╚═════╝   ╚═══╝  ╚══════╝╚═╝  ╚═╝                             " << RESET << "║\n";
-    cout << "║                                                                                     " << RESET << "║\n";
+    cout << "║" << getColorCode(RED) <<  "                       ╚═════╝   ╚═══╝  ╚══════╝╚═╝  ╚═╝                             " << getColorCode(RESET) << "║\n";
+    cout << "║                                                                                     " << getColorCode(RESET) << "║\n";
     sleep(1);
     cout << "╚═════════════════════════════════════════════════════════════════════════════════════╝\n";
-    cout << RESET;
+    cout << getColorCode(RESET);
 }
 
 void Art::showInstructions() {
@@ -101,3 +97,12 @@ void Art::showInstructions() {
     cout << "███████████████████████████████████████████████████████████████████\n";
 }
 
+void Art::GameMode() {
+    cout << "╔═══════════════════════════════════════╗\n";
+    cout << "║            Choose a mode              ║\n";
+    cout << "╠═══════════════════════════════════════╣\n";
+    cout << "║    1 - Solo mode                      ║\n";
+    cout << "║    2 - 2 Players mode                 ║\n";
+    cout << "╚═══════════════════════════════════════╝\n";
+    cout << "> ";
+}

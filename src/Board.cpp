@@ -1,140 +1,186 @@
-//
-// Created by MPAH on 14/10/2024.
-//
 #include <iostream>
 #include <string>
-#include <unistd.h>
 #include "Board.h"
 #include "UX.h"
-#include "Art.h"
 #include "Player.h"
 
 using namespace std;
 
-#define RESET   "\033[0m"
-#define RED     "\033[31m"
-
 void Board::createBoard() {
-    board = new Cell *[size];
-    for (int i = 0; i < size; i++) {
-        board[i] = new Cell[size];
+    _board = new Cell *[_size];
+    for (int i = 0; i < _size; i++) {
+        _board[i] = new Cell[_size];
     }
 }
 
-Board::Board(int Size) {
-    size = Size;
-    numberShipsSunken = 0;
-    createBoard();
-}
-
 std::ostream& operator<<(std::ostream& os, const Board& board) {
-    for (int i = 0; i < board.size; i++) {
-
-        os << char(65+i) << "  ║";
-        for (int j = 0; j < board.size; j++) {
-            if (board.board[i][j].isHidden) {
+    for (int i = 0; i < board._size; i++) {
+        os << static_cast<char>(65 + i) << "  ║";
+        for (int j = 0; j < board._size; j++) {
+            if (board.getCellHidden(i, j)) {
                 os << " . ";
-            } else if (board.board[i][j].ship != nullptr) {
-                if (board.board[i][j].ship->isSunk) {
-                    os << RED << " X " << RESET;
-                } else if (board.board[i][j].ship->isHit) {
+            } else if (board.getShip(i, j) != nullptr) {
+                if (board.getIsShipSunk(i, j)) {
+                    os << getColorCode(Color::RED) << " X " << getColorCode(Color::RESET);
+                } else if (board.getIsShipHit(i, j)) {
                     os << "🔥 ";
                 } else {
-                    os << " " << board.board[i][j].ship->name[0] << " ";
+                    os << " " << board.getShipFirstLetter(i, j) << " ";
                 }
             } else {
                 os << "💧 ";
             }
         }
-        os << std::endl;  // Nouvelle ligne à la fin de chaque ligne du tableau
+        os << std::endl;
     }
-    os << "   ╚═════════════════════════════" << std::endl;
     os << "    1  2  3  4  5  6  7  8  9  10" << std::endl;
     return os;
 }
 
+Board::Board(const int Size) {
+    _size = Size;
+    _numberShipsSunken = 0;
+    createBoard();
+}
 
-bool Board::errorPosition(int x, int y, const Ship &ship) const {
-    if (x < 0 || x > size || y < 0 || y > size) {
+
+bool Board::errorPosition(const int x, const int y, const Ship &ship) const {
+    if (x < 0 || x > _size || y < 0 || y > _size) {
         std::cout << "Position out of range" << std::endl;
         return false;
     }
 
-    if (ship.isHorizontal && y + ship.size > size) {
+    if (ship.getIsHorizontal() && y + ship.getSize() > _size) {
         std::cout << "Ship out of range" << std::endl;
         return false;
     }
 
-    for (int i = 0; i < ship.size; i++) {
-        if (ship.isHorizontal && !board[x][y + i].isHidden) {
+    for (int i = 0; i < ship.getSize(); i++) {
+        if (ship.getIsHorizontal() && !_board[x][y + i].getIsHidden()) {
             std::cout << "Position already occupied" << std::endl;
+            std::cout << "here" << std::endl;
             return false;
         }
 
-        if (!ship.isHorizontal && !board[x + i][y].isHidden) {
+        if (!ship.getIsHorizontal() && !_board[x + i][y].getIsHidden()) {
             std::cout << "Position already occupied" << std::endl;
+            std::cout << "here1" << std::endl;
             return false;
         }
     }
     return true;
 }
 
-bool Board::addShip(int x, int y, Ship &ship) const {
+bool Board::addShip(const int x, const int y, Ship &ship) const {
 
     if (!errorPosition(x, y, ship)) {
         return false;
     }
 
 
-    if (ship.isHorizontal && board[x][y].isHidden) {
-        for(int i = 0; i < ship.size; i++) {
-            board[x][y + i].isHidden = false;
-            board[x][y + i].ship = &ship;
+    if (ship.getIsHorizontal() && _board[x][y].getIsHidden()) {
+        for(int i = 0; i < ship.getSize(); i++) {
+            _board[x][y + i].setIsHidden(false);
+            _board[x][y + i].setShip(&ship);
 
         }
 
-    } else if (!ship.isHorizontal && board[x][y].isHidden) {
-        for (int i = 0; i < ship.size; i++) {
-            board[x + i][y].isHidden = false;
-            board[x + i][y].ship = &ship;
+    } else if (!ship.getIsHorizontal() && _board[x][y].getIsHidden()) {
+        for (int i = 0; i < ship.getSize(); i++) {
+            _board[x + i][y].setIsHidden(false);
+            _board[x + i][y].setShip(&ship);
         }
     }
     return true;
 }
 
 
-void Board::placeAutomatically(std::list<Ship> &Ships) const {
-    std::list x = {0, 1, 5, 6, 9};
-    std::pmr::list y = {0, 0, 5, 1, 0};
+void Board::placeAutomatically(Fleet &fleet) const {
+    const std::vector x = {0, 1, 5, 6, 9};
+    const std::vector y = {0, 0, 5, 1, 0};
 
-    const int size = Ships.size();
+    const size_t size = fleet.getSize();
     for (int i = 0; i < size; i++) {
-        auto ship = Ships.begin();
+        Ship *ship = fleet.getShip(i);
+        addShip(x[i], y[i], *ship);
 
-        auto X = x.begin();
-        std::advance(X, i);
-
-        auto Y = y.begin();
-        std::advance(Y, i);
-
-        std::advance(ship, i);
-
-        addShip(*X, *Y, *ship);
     }
 
 }
 
-void Board::hiddenBoard() const {
-    for (int i = 0; i < size; i++) {
-        for (int j = 0; j < size; j++) {
-            board[i][j].isHidden = true;
+void Board::hideBoard() const {
+    for (int i = 0; i < _size; i++) {
+        for (int j = 0; j < _size; j++) {
+            _board[i][j].setIsHidden(true);
         }
     }
 }
 
+
+/* =========== Getter =========== */
+int Board::getNumberShipsSunken() const {
+    return _numberShipsSunken;
+}
+Cell **Board::getBoard() const {
+    return _board;
+}
+int Board::getSize() const {
+    return _size;
+}
+std::string Board::getStat(const int x, const int y) const {
+    return _board[x][y].getStat();
+}
+Ship *Board::getShip(const int x, const int y) const {
+    return _board[x][y].getShip();
+}
+int Board::getShipSize(const int x, const int y) const {
+    return _board[x][y].getShip()->getSize();
+}
+bool Board::getCellHidden(const int x, const int y) const {
+    return _board[x][y].getIsHidden();
+}
+bool Board::getIsShipSunk(const int x, const int y) const {
+    return _board[x][y].getShip()->getIsSunk();
+}
+
+char Board::getShipFirstLetter(const int x, const int y) const {
+    return _board[x][y].getShip()->getName()[0];
+}
+bool Board::getIsShipHit(const int x, const int y) const {
+    return _board[x][y].getShip()->getIsHit();
+}
+
+
+/* =========== Setter =========== */
+void Board::setShip(const int x, const int y, Ship &ship) const {
+    _board[x][y].setShip(&ship);
+}
+void Board::setCellHidden(const int x, const int y, const bool isHidden) const {
+    _board[x][y].setIsHidden(isHidden);
+}
+void Board::setCellStat(const int x, const int y, const std::string &stat) const {
+    _board[x][y].setStat(stat);
+}
+void Board::setCellHit(const int x, const int y, const bool isHit) const {
+    _board[x][y].getShip()->setIsHit(isHit);
+}
+
+void Board::setCellSunken(const int x, const int y, const bool isSunk) const {
+    _board[x][y].getShip()->setIsSunk(isSunk);
+}
+
+
+void Board::addNumberShipsSunken() {
+    _numberShipsSunken++;
+}
+
+void Board::decrementShipSize(const int x, const int y) const {
+    _board[x][y].getShip()->setSize(_board[x][y].getShip()->getSize() - 1);
+}
+
 Board::~Board() {
-    for (int i = 0; i < size; i++) {
-        delete[] board[i];
+    for (int i = 0; i < _size; i++) {
+        delete[] _board[i];
     }
-    delete[] board;
+    delete[] _board;
 }

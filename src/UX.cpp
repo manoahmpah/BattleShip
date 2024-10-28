@@ -1,17 +1,16 @@
-//
-// Created by MPAH on 18/10/2024.
-//
-
 #include "UX.h"
 
 #include <iostream>
 #include <ostream>
-#include <list>
+#include <vector>
+
 #include "Ship.h"
 #ifdef _WIN32
-#include <Windows.h>
-#define SET_CONSOLE_UTF8 SetConsoleCP(CP_UTF8); SetConsoleOutputCP(CP_UTF8); //Set console output to UTF-8.Visual C++ code on Windows.
-#endif // _WIN32
+    #include <windows.h>
+    #define SET_CONSOLE_UTF8 SetConsoleCP(CP_UTF8); SetConsoleOutputCP(CP_UTF8);
+#else
+    #define SET_CONSOLE_UTF8
+#endif
 using namespace std;
 
 void UX::questionPosition(int &x, int &y) {
@@ -23,7 +22,7 @@ void UX::questionPosition(int &x, int &y) {
         cin >> y;
 }
 
-void UX::questionAddShip(int &chosenShip, const std::list<Ship> &Ships) {
+void UX::questionAddShip(int &chosenShip, const vector<Ship> &Ships) {
 #ifdef _WIN32
         SET_CONSOLE_UTF8
     #endif
@@ -35,17 +34,17 @@ void UX::questionAddShip(int &chosenShip, const std::list<Ship> &Ships) {
 
         size_t maxLength = 0;
         for (const auto &ship : Ships) {
-                if (!ship.isPosed) {
-                        maxLength = std::max(maxLength, ship.name.length());
+                if (!ship.getIsPosed()) {
+                        maxLength = std::max(maxLength, ship.getName().length());
                 }
         }
 
         int i = 1;
         for (const auto &ship : Ships) {
-                if (!ship.isPosed) {
-                        size_t padding = maxLength - ship.name.length();
-                        cout << "                      " << ship.id << " - " << ship.name << string(padding, ' ')
-                               << " [ " << ship.size << " of weight ]                      \n";
+                if (!ship.getIsPosed()) {
+                        size_t padding = maxLength - ship.getName().length();
+                        cout << "                      " << ship.getId() << " - " << ship.getName() << string(padding, ' ')
+                               << " [ " << ship.getSize() << " of weight ]                      \n";
                         i++;
                 }
         }

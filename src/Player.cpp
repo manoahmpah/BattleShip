@@ -1,53 +1,66 @@
-//
-// Created by MPAH on 18/10/2024.
-//
-
 #include "Player.h"
 #include "Board.h"
 #include "Fleet.h"
 #include <iostream>
+#include <utility>
 #include <unistd.h>
 
 #include "Art.h"
 #include "UX.h"
+#include "Color.h"
 
-#define RESET   "\033[0m"
-#define RED     "\033[31m"
-
-Player::Player(const std::string &Name)
-    : playerBoard(10)
-    , playerFleet()
-{
-    name = Name;
+Player::Player(std::string  Name)
+    : name(std::move(Name)), playerBoard(10),
+      opponentBoard(Board(10)) {
+    playerBoard.createBoard();
     autoPlay = false;
+}
+
+void Player::setOpponentBoard(const Board &board) {
+    opponentBoard = board;
+}
+
+Board& Player::getBoard() {
+    return playerBoard;
 }
 
 void Player::displayBoard() const {
     std::cout << playerBoard << std::endl;
 }
 
+Player& Player::operator=(const Player &player) {
+    if (this != &player) {
+        name = player.name;
+        playerBoard = player.playerBoard;
+        playerFleet = player.playerFleet;
+        autoPlay = player.autoPlay;
+    }
+    return *this;
+}
+
+
 bool Player::placeShip(const int x, const int y, Ship &ship) const {
     if (!playerBoard.errorPosition(x, y, ship)) {
         return false;
     }
 
-    if (ship.isHorizontal && playerBoard.board[x][y].isHidden) {
-        for(int i = 0; i < ship.size; i++) {
-            playerBoard.board[x][y + i].isHidden = false;
-            playerBoard.board[x][y + i].ship = &ship;
+    if (ship.getIsHorizontal() && playerBoard.getCellHidden(x, y)) {
+        for(int i = 0; i < ship.getSize(); i++) {
+            playerBoard.setCellHidden(x, y + i, false);
+            playerBoard.setShip(x, y + i, ship);
         }
 
-    } else if (!ship.isHorizontal && playerBoard.board[x][y].isHidden) {
-        for (int i = 0; i < ship.size; i++) {
-            playerBoard.board[x + i][y].isHidden = false;
-            playerBoard.board[x + i][y].ship = &ship;
+    } else if (!ship.getIsHorizontal() && playerBoard.getCellHidden(x, y)) {
+        for (int i = 0; i < ship.getSize(); i++) {
+            playerBoard.setCellHidden(x + i, y, false);
+            playerBoard.setShip(x + i, y, ship);
         }
     }
 
     return true;
 }
 
-void Player::autoPlaceShips() {
+void Player::PlaceShips() {
     int x; int y;
     int chosenShip;
 
@@ -55,30 +68,29 @@ void Player::autoPlaceShips() {
     std::cout << " ========= " << name << " =========" << std::endl;
     std::cout << playerBoard << std::endl;
     int numberShipsPosed = 0;
-    while (numberShipsPosed < playerFleet.Ships.size()) {
+    while (numberShipsPosed < playerFleet.getSize()) {
         numberShipsPosed++;
-        UX::questionAddShip(chosenShip, playerFleet.Ships);
+        UX::questionAddShip(chosenShip, playerFleet.getShips());
 
         // ======== Check if player choose a right ship ======== //
-        if (chosenShip < 1 || chosenShip > playerFleet.Ships.size()) {
+        if (chosenShip < 1 || chosenShip > playerFleet.getSize()) {
             std::cout << "Invalid ship" << std::endl;
             continue;
         }
 
         UX::questionPosition(x, y);
 
-        auto ship = playerFleet.Ships.begin();
-        std::advance(ship, chosenShip - 1);
-        if (ship->isPosed) {
+        const auto ship = playerFleet.getShip(chosenShip - 1);
+        if (ship->getIsPosed()) {
             system("cls");
             std::cout << std::endl;
-            std::cout << RED << "Ship already posed" << RESET << std::endl;
+            std::cout << getColorCode(Color::RED) << "Ship already posed" << getColorCode(Color::RESET) << std::endl;
             std::cout << std::endl;
             std::cout << playerBoard << std::endl;
             std::cout << std::endl;
             continue;
         }
-        ship->isPosed = true;
+        ship->setIsPosed(true);
 
         if (!placeShip(x - 1, y - 1, *ship)) {
             std::cout << playerBoard << std::endl;
@@ -91,40 +103,19 @@ void Player::autoPlaceShips() {
     }
 }
 
-void Player::gameMode()  {
-    std::cout << "Starting Battle Ship Game" << std::endl;
-    int gameMode;
-    std::cout << "╔═══════════════════════════════════════╗\n";
-    std::cout << "║            Choose a mode              ║\n";
-    std::cout << "╠═══════════════════════════════════════╣\n";
-    std::cout << "║    1 - Solo mode                      ║\n";
-    std::cout << "║    2 - 2 Players mode                 ║\n";
-    std::cout << "╚═══════════════════════════════════════╝\n";
-    std::cout << "> ";
-    std::cin >> gameMode;
-    system("cls");
-    switch (gameMode) {
-        case 1: {
-            // Player player1("Maxime");
-            // Player player2("Cédric");
-            break;
-        }
-        case 2: {
+std::string Player::getName() const {
+    return name;
+}
 
-            break;
-        }
-        default: {
-            std::cout << "Invalid option. Please try again." << std::endl;
-            break;
-        }
-    }
+void Player::gameMode()  {
+
     system("cls");
     std::cout << " ======= All ships placed =======" << std::endl;
     std::cout << std::endl;
-    playerBoard.hiddenBoard();
+    playerBoard.hideBoard();
     std::cout << playerBoard << std::endl;
 
-    while (playerBoard.numberShipsSunken < playerFleet.Ships.size()) {
+    while (playerBoard.getNumberShipsSunken() < playerFleet.getSize()) {
         int x; int y;
         UX::questionPosition(x, y);
         hitCell(x - 1, y - 1);
@@ -135,27 +126,31 @@ void Player::gameMode()  {
     sleep(3);
 }
 
-void Player::hitCell(int x, int y) {
-    if (x < 0 || x >= playerBoard.size || y < 0 || y >= playerBoard.size) {
+void Player::hitCell(const int x, const int y) {
+    if (x < 0 || x >= playerBoard.getSize() || y < 0 || y >= playerBoard.getSize()) {
         std::cout << "Position out of range" << std::endl;
         return;
     }
-    if (playerBoard.board[x][y].ship == nullptr) {
+    if (playerBoard.getShip(x, y) == nullptr) {
         std::cout << "======= Miss =======" << std::endl;
-        std::cout << playerBoard.board[x][y].stat << std::endl;
-        playerBoard.board[x][y].stat = "o";
-        playerBoard.board[x][y].isHidden = false;
-    }else if(playerBoard.board[x][y].ship->size == 1 && playerBoard.board[x][y].stat != "x") {
-        playerBoard.board[x][y].ship->isSunk = true;
-        playerBoard.numberShipsSunken++;
-        playerBoard.board[x][y].stat = "X";
-        playerBoard.board[x][y].ship->size--;
-        playerBoard.board[x][y].isHidden = false;
-    }else if (playerBoard.board[x][y].ship != nullptr && playerBoard.board[x][y].stat != "x") {
-        playerBoard.board[x][y].ship->isHit = true;
-        playerBoard.board[x][y].stat = "x";
-        playerBoard.board[x][y].ship->size--;
-        playerBoard.board[x][y].isHidden = false;
+        std::cout << playerBoard.getStat(x, y) << std::endl;
+        playerBoard.setCellStat(x, y, "o");
+        playerBoard.setCellHidden(x, y, false);
+    }else if(playerBoard.getShipSize(x, y) == 1 && playerBoard.getStat(x, y) != "x") {
+        playerBoard.setCellSunken(x, y, true);
+        playerBoard.addNumberShipsSunken();
+        playerBoard.setCellStat(x, y, "X");
+        playerBoard.decrementShipSize(x, y);
+        playerBoard.setCellHidden(x, y, false);
+    }else if (playerBoard.getShip(x, y) != nullptr && playerBoard.getStat(x, y) != "x") {
+        playerBoard.setCellHit(x, y, true);
+        playerBoard.setCellStat(x, y, "x");
+        playerBoard.decrementShipSize(x, y);
+        playerBoard.setCellHidden(x, y, false);
 
     }
+}
+
+Fleet& Player::getFleet() {
+    return playerFleet;
 }

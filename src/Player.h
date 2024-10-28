@@ -10,18 +10,26 @@
 
 class Player {
 public:
-        Player(const std::string &name);
+        explicit Player(std::string Name);
         void displayBoard() const;
-        void autoPlaceShips();
+        Player& operator=(const Player &player);
+        void PlaceShips();
         void gameMode();
+        void setOpponentBoard(const Board &board);
+        Board& getBoard();
+        Fleet& getFleet();
+        void hitCell(int x, int y);
+        [[nodiscard]] std::string getName() const;
+
+
 
 private:
         std::string name;
         bool placeShip(int x, int y, Ship &ship) const;
-        void hitCell(int x, int y);
         Board playerBoard;
-        Fleet playerFleet;
         bool autoPlay = false;
+        Board opponentBoard;
+        Fleet playerFleet;
 };
 
 

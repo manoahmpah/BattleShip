@@ -33,7 +33,19 @@ std::ostream& operator<<(std::ostream& os, const Board& board) {
         }
         os << std::endl;
     }
-    os << "    1  2  3  4  5  6  7  8  9  10" << std::endl;
+
+    int decoration = 0;
+    while (decoration < 2) {
+        for (int i = 0; i < board._size; i++) {
+            if (decoration == 0) {
+                os << (i == 0 ? "   ╚══" : "═══");
+            } else {
+                os << (i == 0 ? "    " : "  ") << (i + 1);
+            }
+        }
+        os << std::endl;
+        decoration++;
+    }
     return os;
 }
 

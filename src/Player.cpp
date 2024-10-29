@@ -1,10 +1,11 @@
-#include "Player.h"
-#include "Board.h"
-#include "Fleet.h"
 #include <iostream>
 #include <utility>
 #include <unistd.h>
+#include <random>
 
+#include "Player.h"
+#include "Board.h"
+#include "Fleet.h"
 #include "Art.h"
 #include "UX.h"
 #include "Color.h"
@@ -18,6 +19,10 @@ Player::Player(std::string  Name)
 
 void Player::setOpponentBoard(const Board &board) {
     _opponentBoard = board;
+}
+
+void Player::setAutoPlay(const bool autoPlay) {
+    _autoPlay = autoPlay;
 }
 
 Board& Player::getBoard() {
@@ -34,7 +39,6 @@ void Player::hideBoard() const {
 
 void Player::placeAuto() {
     _playerBoard.placeAutomatically(_playerFleet);
-    _autoPlay = true;
 }
 
 void Player::createBoard() {
@@ -74,7 +78,7 @@ bool Player::placeShip(const int x, const int y, Ship &ship) const {
     return true;
 }
 
-void Player::PlaceShips() {
+void Player::placeShips() {
     int x; int y;
     int chosenShip;
 
@@ -121,6 +125,10 @@ std::string Player::getName() const {
     return _name;
 }
 
+bool Player::getAutoPlay() const {
+    return _autoPlay;
+}
+
 void Player::gameMode()  {
 
     system("cls");
@@ -150,12 +158,16 @@ void Player::hitCell(const int x, const int y) {
         std::cout << _playerBoard.getStat(x, y) << std::endl;
         _playerBoard.setCellStat(x, y, "o");
         _playerBoard.setCellHidden(x, y, false);
+
+    /* =========== ship about to sink =========== */
     }else if(_playerBoard.getShipSize(x, y) == 1 && _playerBoard.getStat(x, y) != "x") {
         _playerBoard.setCellSunken(x, y, true);
         _playerBoard.addNumberShipsSunken();
         _playerBoard.setCellStat(x, y, "X");
         _playerBoard.decrementShipSize(x, y);
         _playerBoard.setCellHidden(x, y, false);
+
+    /* =========== boat touch =========== */
     }else if (_playerBoard.getShip(x, y) != nullptr && _playerBoard.getStat(x, y) != "x") {
         _playerBoard.setCellHit(x, y, true);
         _playerBoard.setCellStat(x, y, "x");
@@ -163,6 +175,20 @@ void Player::hitCell(const int x, const int y) {
         _playerBoard.setCellHidden(x, y, false);
 
     }
+}
+
+void Player::autoHitCell() {
+    if (!_autoPlay) {
+        throw std::logic_error("Player is not in auto play mode");
+    }
+
+    std::random_device rd;
+    std::mt19937 generator(rd());
+    std::uniform_int_distribution distribution(0, _playerBoard.getSize() - 1);
+    const int x = distribution(generator);
+    const int y = distribution(generator);
+
+    hitCell(x, y);
 }
 
 Fleet& Player::getFleet() {

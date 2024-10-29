@@ -56,7 +56,8 @@ void Game::chooseGameMode() {
             _player1.hideBoard();
             _player2.setOpponentBoard(_player1.getBoard());
 
-            _player2.PlaceShips();
+            _player2.placeShips();
+            _player2.setAutoPlay(true);
             _player2.hideBoard();
             _player1.setOpponentBoard(_player2.getBoard());
 
@@ -65,11 +66,11 @@ void Game::chooseGameMode() {
             break;
         }
         case 2: {
-            _player1.PlaceShips();
+            _player1.placeShips();
             _player1.hideBoard();
             _player2.setOpponentBoard(_player1.getBoard());
 
-            _player2.PlaceShips();
+            _player2.placeShips();
             _player2.hideBoard();
             _player1.setOpponentBoard(_player2.getBoard());
 
@@ -93,21 +94,41 @@ void Game::gameLoop(Player &player1, Player &player2, int &playerToPlay) {
 
         using enum Color;
         int x; int y;
-        std::cout << " ========= " << (playerToPlay == 1 ? getColorCode(RED) : getColorCode(RESET)) << player1.getName() << " (1)" << getColorCode(RESET) << " =========" << std::endl;
+        std::cout << " ========= " << (playerToPlay == 2 ? getColorCode(RED) : getColorCode(RESET)) << player1.getName() << " (1)" << getColorCode(RESET) << " =========" << std::endl;
         player1.displayBoard();
-        std::cout << " ========= " << (playerToPlay == 2 ? getColorCode(RED) : getColorCode(RESET)) << player2.getName() << " (2)" << getColorCode(RESET) << " =========" << std::endl;
+        std::cout << " ========= " << (playerToPlay == 1 ? getColorCode(RED) : getColorCode(RESET)) << player2.getName() << " (2)" << getColorCode(RESET) << " =========" << std::endl;
         player1.displayOpponentBoard();
         UX::questionPosition(x, y);
 
+        /* =========== Player 1 =========== */
         if (playerToPlay == 1) {
-            player1.hitCell(x - 1, y - 1);
-            system("cls");
-            playerToPlay = 2;
+            if (player2.getAutoPlay()) {
+                player2.autoHitCell();
+                system("cls");
+                playerToPlay = 2;
+            } else {
+                player2.hitCell(x - 1, y - 1);
+                system("cls");
+                playerToPlay = 2;
+            }
         }
-        else {
-            player2.hitCell(x - 1, y - 1);
-            system("cls");
-            playerToPlay = 1;
+
+        /* =========== Player 2 =========== */
+        if (playerToPlay == 2) {
+            if (player1.getAutoPlay()) {
+                player1.autoHitCell();
+                system("cls");
+                playerToPlay = 1;
+            } else {
+                player1.hitCell(x - 1, y - 1);
+                system("cls");
+                playerToPlay = 1;
+            }
         }
+
+
+
+
+
     }
 }

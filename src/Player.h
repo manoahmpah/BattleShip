@@ -14,26 +14,24 @@ public:
 
         /* =========== Methods ========== */
         void displayBoard() const;
-
         void hideBoard() const;
-
         void placeAuto();
-
         void createBoard();
-
         void hideBoard();
-
-        void PlaceShips();
+        void placeShips();
         void gameMode();
         void hitCell(int x, int y);
+        void autoHitCell();
         void displayOpponentBoard() const;
 
         /* =========== Setter =========== */
         void setOpponentBoard(const Board &board);
+        void setAutoPlay(bool autoPlay);
 
         /* =========== Getter =========== */
         Board& getBoard();
         Fleet& getFleet();
+        [[nodiscard]] bool getAutoPlay() const;
         [[nodiscard]] std::string getName() const;
         [[nodiscard]] Board getOpponentBoard() const;
 

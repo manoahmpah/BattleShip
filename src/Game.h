@@ -11,6 +11,9 @@ public:
 
 private:
     void chooseGameMode();
+
+    static int isNumber();
+
     static void gameLoop(Player &player1, Player &player2, int &playerToPlay);
     Player _player1;
     Player _player2;

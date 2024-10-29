@@ -76,19 +76,34 @@ void Player::placeShips() {
         }
 
         const auto ship = _playerFleet.getShip(chosenShip - 1);
+
+        /* ======== If ship is already posed ======== */
         if (ship->getIsPosed()) {
             system("cls");
             Art::shipAlreadyPlaced();
             std::cout << std::endl;
+            std::cout << " ========= " << _name << " =========" << std::endl;
             std::cout << _playerBoard << std::endl;
             std::cout << std::endl;
             continue;
         }
+
         UX::questionPosition(x, y);
 
+        if (0 > x >= _playerBoard.getSize() || 0 > y >= _playerBoard.getSize()) {
+            system("cls");
+            Art::invalidOption();
+            std::cout << " ========= " << _name << " =========" << std::endl;
+            std::cout << _playerBoard << std::endl;
+            continue;
+        }
+
+        /* ======== If the place of the Ship is already occupied ========  */
         if (!placeShip(x - 1, y - 1, *ship)) {
             system("cls");
             Art::invalidOption();
+
+            std::cout << " ========= " << _name << " =========" << std::endl;
             std::cout << _playerBoard << std::endl;
             continue;
         }

@@ -13,40 +13,34 @@ Game::Game(const Player &player1, const Player &player2): _player1("Maxime"), _p
 
 void Game::startGame() {
     Art::showLandingPage();
-    int option;
-    cout << "> ";
-    cin >> option;
-    cout << endl;
+    const int option = isNumber();
+
+    std::cout << std::endl;
 
     switch (option) {
         case 1:
-        {
             system("cls");
-            chooseGameMode();
-            break;
-        }
+        chooseGameMode();
+        break;
         case 2:
-        {
             Art::showInstructions();
-            cin.ignore();
-            cin.get();
-            break;
-        }
+        std::cin.ignore();
+        std::cin.get();
+        break;
         case 3:
-            cout << "Goodbye" << endl;
-
+            std::cout << "Goodbye" << std::endl;
+        break;
         default:
-        {
             Art::invalidOption();
-            startGame();
-            break;
-        }
+        startGame();
+        break;
     }
 }
+
 void Game::chooseGameMode() {
-    int gameMode;
     Art::gameMode();
-    std::cin >> gameMode;
+    const int gameMode = isNumber();
+
     _player1 = Player("Maxime");
     _player2 = Player("Cédric");
     _player1.createBoard();
@@ -64,7 +58,6 @@ void Game::chooseGameMode() {
 
             gameLoop(_player1, _player2, _playerToPlay);
             Art::gameOver();
-
             break;
         }
         case 2: {
@@ -76,19 +69,35 @@ void Game::chooseGameMode() {
 
             gameLoop(_player1, _player2, _playerToPlay);
             Art::gameOver();
-
             break;
         }
-
-        case 3:
-        {
+        case 3: {
             return;
         }
-        default:
-        {
+        default: {
             Art::invalidOption();
             chooseGameMode();
             break;
+        }
+    }
+}
+
+int Game::isNumber() {
+    std::string input;
+
+    while (true) {
+        std::cout << "> ";
+        std::getline(std::cin, input);
+
+        try {
+            const int option = std::stoi(input);
+            return option;
+        } catch (std::invalid_argument&) {
+            Art::invalidOption();
+            return 0;
+        } catch (std::out_of_range&) {
+            Art::invalidOption();
+            return 0;
         }
     }
 }

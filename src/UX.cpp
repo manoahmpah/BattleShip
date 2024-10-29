@@ -42,7 +42,7 @@ void UX::questionAddShip(int &chosenShip, const vector<Ship> &Ships) {
         int i = 1;
         for (const auto &ship : Ships) {
                 if (!ship.getIsPosed()) {
-                        size_t padding = maxLength - ship.getName().length();
+                        const size_t padding = maxLength - ship.getName().length();
                         cout << "                      " << ship.getId() << " - " << ship.getName() << string(padding, ' ')
                                << " [ " << ship.getSize() << " of weight ]                      \n";
                         i++;

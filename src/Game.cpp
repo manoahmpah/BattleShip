@@ -44,7 +44,6 @@ void Game::startGame() {
     }
 }
 void Game::chooseGameMode() {
-    std::cout << "Starting Battle Ship Game" << std::endl;
     int gameMode;
     Art::gameMode();
     std::cin >> gameMode;
@@ -81,10 +80,12 @@ void Game::chooseGameMode() {
             break;
         }
 
-        case 3: {
+        case 3:
+        {
             return;
         }
-        default: {
+        default:
+        {
             Art::invalidOption();
             chooseGameMode();
             break;

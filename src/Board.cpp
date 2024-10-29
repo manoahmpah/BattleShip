@@ -69,14 +69,10 @@ bool Board::errorPosition(const int x, const int y, const Ship &ship) const {
 
     for (int i = 0; i < ship.getSize(); i++) {
         if (ship.getIsHorizontal() && !_board[x][y + i].getIsHidden()) {
-            std::cout << "Position already occupied" << std::endl;
-            std::cout << "here" << std::endl;
             return false;
         }
 
         if (!ship.getIsHorizontal() && !_board[x + i][y].getIsHidden()) {
-            std::cout << "Position already occupied" << std::endl;
-            std::cout << "here1" << std::endl;
             return false;
         }
     }

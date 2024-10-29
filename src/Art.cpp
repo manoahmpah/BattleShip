@@ -51,6 +51,12 @@ void Art::invalidOption() {
     cout << "" << endl;
 }
 
+void Art::shipAlreadyPlaced() {
+    cout << "╔══════════════════════════════════════════════════════════════════════════════════════╗\n";
+    cout << "║                                  Ship already posed.                                 ║\n";
+    cout << "╚══════════════════════════════════════════════════════════════════════════════════════╝\n";
+    cout << "" << endl;
+}
 void Art::gameOver() {
     #ifdef _WIN32
     SET_CONSOLE_UTF8

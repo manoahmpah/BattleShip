@@ -3,7 +3,8 @@ project(Battleship)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(Battleship src/main.cpp
+add_executable(Battleship
+        src/main.cpp
         src/board.cpp
         src/Cell.cpp
         src/Ship.cpp

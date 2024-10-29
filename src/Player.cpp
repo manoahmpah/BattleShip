@@ -71,29 +71,29 @@ void Player::placeShips() {
 
         // ======== Check if player choose a right ship ======== //
         if (chosenShip < 1 || chosenShip > _playerFleet.getSize()) {
-            std::cout << "Invalid ship" << std::endl;
+            Art::invalidOption();
             continue;
         }
-
-        UX::questionPosition(x, y);
 
         const auto ship = _playerFleet.getShip(chosenShip - 1);
         if (ship->getIsPosed()) {
             system("cls");
-            std::cout << std::endl;
-            std::cout << getColorCode(Color::RED) << "Ship already posed" << getColorCode(Color::RESET) << std::endl;
+            Art::shipAlreadyPlaced();
             std::cout << std::endl;
             std::cout << _playerBoard << std::endl;
             std::cout << std::endl;
             continue;
         }
-        ship->setIsPosed(true);
+        UX::questionPosition(x, y);
 
         if (!placeShip(x - 1, y - 1, *ship)) {
+            system("cls");
+            Art::invalidOption();
             std::cout << _playerBoard << std::endl;
             continue;
         }
 
+        ship->setIsPosed(true);
         system("cls");
         std::cout << " ========= " << _name << " =========" << std::endl;
         std::cout << _playerBoard << std::endl;

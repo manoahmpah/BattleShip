@@ -14,40 +14,43 @@ void Board::createBoard() {
 }
 
 std::ostream& operator<<(std::ostream& os, const Board& board) {
+    os << "    ";
+    for (int i = 1; i <= board._size; i++) {
+        os << " " << i << " ";
+    }
+    os << "\n   ╔";
     for (int i = 0; i < board._size; i++) {
-        os << static_cast<char>(65 + i) << "  ║";
+        os << "═══";
+    }
+    os << "╗\n";
+
+    for (int i = 0; i < board._size; i++) {
+        os << " " << static_cast<char>(65 + i) << " ║";  // Lettre de ligne
         for (int j = 0; j < board._size; j++) {
             if (board.getCellHidden(i, j)) {
                 os << " . ";
             } else if (board.getShip(i, j) != nullptr) {
                 if (board.getIsShipSunk(i, j)) {
-                    os << getColorCode(Color::RED) << " X " << getColorCode(Color::RESET);
+                    os << getColorCode(Color::RED) << " X " << getColorCode(Color::RESET); // Bateau coulé
                 } else if (board.getIsShipHit(i, j)) {
                     os << "🔥 ";
                 } else {
-                    os << " " << board.getShipFirstLetter(i, j) << " ";
+                    os << " " << board.getShipFirstLetter(i, j) << " "; // Bateau intact
                 }
             } else {
                 os << "💧 ";
             }
         }
-        os << std::endl;
+        os << "║\n";
     }
-
-    int decoration = 0;
-    while (decoration < 2) {
-        for (int i = 0; i < board._size; i++) {
-            if (decoration == 0) {
-                os << (i == 0 ? "   ╚══" : "═══");
-            } else {
-                os << (i == 0 ? "    " : "  ") << (i + 1);
-            }
-        }
-        os << std::endl;
-        decoration++;
+    os << "   ╚";
+    for (int i = 0; i < board._size; i++) {
+        os << "═══";
     }
+    os << "╝\n";
     return os;
 }
+
 
 Board::Board(const int Size) {
     _size = Size;

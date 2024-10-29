@@ -62,7 +62,7 @@ void Player::placeShips() {
     int chosenShip;
 
     system("cls");
-    std::cout << " ========= " << _name << " =========" << std::endl;
+    std::cout << "     ========= " << _name << " =========" << std::endl;
     std::cout << _playerBoard << std::endl;
     int numberShipsPosed = 0;
     while (numberShipsPosed < _playerFleet.getSize()) {
@@ -82,7 +82,7 @@ void Player::placeShips() {
             system("cls");
             Art::shipAlreadyPlaced();
             std::cout << std::endl;
-            std::cout << " ========= " << _name << " =========" << std::endl;
+            std::cout << "     ========= " << _name << " =========" << std::endl;
             std::cout << _playerBoard << std::endl;
             std::cout << std::endl;
             continue;
@@ -93,7 +93,7 @@ void Player::placeShips() {
         if (0 > x >= _playerBoard.getSize() || 0 > y >= _playerBoard.getSize()) {
             system("cls");
             Art::invalidOption();
-            std::cout << " ========= " << _name << " =========" << std::endl;
+            std::cout << "     ========= " << _name << " =========" << std::endl;
             std::cout << _playerBoard << std::endl;
             continue;
         }
@@ -103,16 +103,17 @@ void Player::placeShips() {
             system("cls");
             Art::invalidOption();
 
-            std::cout << " ========= " << _name << " =========" << std::endl;
+            std::cout << "     ========= " << _name << " =========" << std::endl;
             std::cout << _playerBoard << std::endl;
             continue;
         }
 
         ship->setIsPosed(true);
         system("cls");
-        std::cout << " ========= " << _name << " =========" << std::endl;
+        std::cout << "     ========= " << _name << " =========" << std::endl;
         std::cout << _playerBoard << std::endl;
     }
+    system("cls");
 }
 
 

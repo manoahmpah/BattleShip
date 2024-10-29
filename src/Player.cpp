@@ -11,52 +11,32 @@
 #include "Color.h"
 
 Player::Player(std::string  Name)
-    : _name(std::move(Name)), _playerBoard(10),
-      _opponentBoard(Board(10)) {
+    : _name(std::move(Name)), _playerBoard(10) {
     _playerBoard.createBoard();
     _autoPlay = false;
-}
-
-void Player::setOpponentBoard(const Board &board) {
-    _opponentBoard = board;
 }
 
 void Player::setAutoPlay(const bool autoPlay) {
     _autoPlay = autoPlay;
 }
-
 Board& Player::getBoard() {
     return _playerBoard;
 }
-
 void Player::displayBoard() const {
     std::cout << _playerBoard << std::endl;
 }
-
 void Player::hideBoard() const {
     _playerBoard.hideBoard();
 }
-
 void Player::placeAuto() {
     _playerBoard.placeAutomatically(_playerFleet);
 }
-
 void Player::createBoard() {
     _playerBoard.createBoard();
 }
-
 void Player::hideBoard() {
     _playerBoard.hideBoard();
 }
-
-Board Player::getOpponentBoard() const {
-    return _opponentBoard;
-}
-
-void Player::displayOpponentBoard() const {
-    std::cout << _opponentBoard << std::endl;
-}
-
 bool Player::placeShip(const int x, const int y, Ship &ship) const {
     if (!_playerBoard.errorPosition(x, y, ship)) {
         return false;
@@ -77,7 +57,6 @@ bool Player::placeShip(const int x, const int y, Ship &ship) const {
 
     return true;
 }
-
 void Player::placeShips() {
     int x; int y;
     int chosenShip;
@@ -121,31 +100,19 @@ void Player::placeShips() {
     }
 }
 
+
+/* =========== Getter =========== */
 std::string Player::getName() const {
     return _name;
 }
-
 bool Player::getAutoPlay() const {
     return _autoPlay;
 }
-
-void Player::gameMode()  {
-
-    system("cls");
-    std::cout << " ======= All ships placed =======" << std::endl;
-    std::cout << std::endl;
-    _playerBoard.hideBoard();
-    std::cout << _playerBoard << std::endl;
-
-    while (_playerBoard.getNumberShipsSunken() < _playerFleet.getSize()) {
-        int x; int y;
-        UX::questionPosition(x, y);
-        hitCell(x - 1, y - 1);
-        system("cls");
-        std::cout << _playerBoard << std::endl;
-    }
-    Art::gameOver();
-    sleep(3);
+int Player::getNumberShipsSunken() const {
+    return _playerBoard.getNumberShipsSunken();
+}
+size_t Player::getFleetSize() const {
+    return _playerFleet.getSize();
 }
 
 void Player::hitCell(const int x, const int y) {

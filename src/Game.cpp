@@ -21,28 +21,32 @@ void Game::startGame() {
     switch (option) {
         case 1:
         {
+            system("cls");
             chooseGameMode();
-
+            break;
         }
-        break;
-
         case 2:
+        {
             Art::showInstructions();
-        cin.ignore();
-        cin.get();
-        break;
+            cin.ignore();
+            cin.get();
+            break;
+        }
         case 3:
             cout << "Goodbye" << endl;
 
         default:
-            cout << "Invalid option. Please try again." << endl;
-        break;
+        {
+            Art::invalidOption();
+            startGame();
+            break;
+        }
     }
 }
 void Game::chooseGameMode() {
     std::cout << "Starting Battle Ship Game" << std::endl;
     int gameMode;
-    Art::GameMode();
+    Art::gameMode();
     std::cin >> gameMode;
     _player1 = Player("Maxime");
     _player2 = Player("Cédric");
@@ -54,50 +58,48 @@ void Game::chooseGameMode() {
         case 1: {
             _player1.placeAuto();
             _player1.hideBoard();
-            _player2.setOpponentBoard(_player1.getBoard());
 
             _player2.placeShips();
             _player2.setAutoPlay(true);
             _player2.hideBoard();
-            _player1.setOpponentBoard(_player2.getBoard());
 
             gameLoop(_player1, _player2, _playerToPlay);
+            Art::gameOver();
 
             break;
         }
         case 2: {
             _player1.placeShips();
             _player1.hideBoard();
-            _player2.setOpponentBoard(_player1.getBoard());
 
             _player2.placeShips();
             _player2.hideBoard();
-            _player1.setOpponentBoard(_player2.getBoard());
 
             gameLoop(_player1, _player2, _playerToPlay);
+            Art::gameOver();
 
             break;
         }
+
+        case 3: {
+            return;
+        }
         default: {
-            std::cout << "Invalid option. Please try again." << std::endl;
-
+            Art::invalidOption();
             chooseGameMode();
-
             break;
         }
     }
 }
 
 void Game::gameLoop(Player &player1, Player &player2, int &playerToPlay) {
-    while (player1.getBoard().getNumberShipsSunken() < player1.getFleet().getSize()
-                || player2.getBoard().getNumberShipsSunken() < player2.getFleet().getSize()) {
-
+    while (player1.getNumberShipsSunken() < player1.getFleetSize() || player2.getNumberShipsSunken() < player2.getFleetSize()) {
         using enum Color;
         int x; int y;
-        std::cout << " ========= " << (playerToPlay == 2 ? getColorCode(RED) : getColorCode(RESET)) << player1.getName() << " (1)" << getColorCode(RESET) << " =========" << std::endl;
+        std::cout << " ========= " << (playerToPlay == 1 ? getColorCode(RED) : getColorCode(RESET)) << player1.getName() << " (1)" << getColorCode(RESET) << " =========" << std::endl;
         player1.displayBoard();
-        std::cout << " ========= " << (playerToPlay == 1 ? getColorCode(RED) : getColorCode(RESET)) << player2.getName() << " (2)" << getColorCode(RESET) << " =========" << std::endl;
-        player1.displayOpponentBoard();
+        std::cout << " ========= " << (playerToPlay == 2 ? getColorCode(RED) : getColorCode(RESET)) << player2.getName() << " (2)" << getColorCode(RESET) << " =========" << std::endl;
+        player2.displayBoard();
         UX::questionPosition(x, y);
 
         /* =========== Player 1 =========== */

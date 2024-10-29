@@ -1,6 +1,4 @@
-//
-// Created by MPAH on 18/10/2024.
-//
+#pragma once
 #include "Board.h"
 #include "Fleet.h"
 #ifndef PLAYER_H
@@ -19,21 +17,20 @@ public:
         void createBoard();
         void hideBoard();
         void placeShips();
-        void gameMode();
+        void hitOpponentCell(int x, int y);
         void hitCell(int x, int y);
         void autoHitCell();
-        void displayOpponentBoard() const;
 
         /* =========== Setter =========== */
-        void setOpponentBoard(const Board &board);
         void setAutoPlay(bool autoPlay);
 
         /* =========== Getter =========== */
         Board& getBoard();
         Fleet& getFleet();
         [[nodiscard]] bool getAutoPlay() const;
+        [[nodiscard]] int getNumberShipsSunken() const;
+        [[nodiscard]] size_t getFleetSize() const;
         [[nodiscard]] std::string getName() const;
-        [[nodiscard]] Board getOpponentBoard() const;
 
 private:
         bool placeShip(int x, int y, Ship &ship) const;
@@ -42,10 +39,9 @@ private:
         std::string _name;
         Board _playerBoard;
         bool _autoPlay = false;
-        Board _opponentBoard;
         Fleet _playerFleet;
 };
 
 
 
-#endif //PLAYER_H
+#endif
